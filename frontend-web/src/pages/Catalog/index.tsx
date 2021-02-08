@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from './components/ProductCard';
 import './styles.scss';
-import { makeRequest } from '../../core/utils/request';
-import { ProductsResponse } from '../../core/types/Product';
+import { makeRequest } from 'core/utils/request';
+import { ProductsResponse } from 'core/types/Product';
 import ProductCardLoader from './components/Loaders/ProductCardLoader';
 
 const Catalog = () => {
@@ -17,7 +17,7 @@ const Catalog = () => {
     }
 
     setIsLoading(true);
-    
+
     makeRequest({ url: '/products', params })
       .then(response => setProductsResponse(response.data))
       .finally(() => {
