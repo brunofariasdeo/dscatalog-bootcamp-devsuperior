@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "aws.access_key_id",
+  "type": "java.lang.String",
+  "description": "A description for 'aws.access_key_id'"
+}]}
