@@ -1,37 +1,55 @@
 import ButtonIcon from 'core/components/ButtonIcon';
-import React from 'react';
+import { saveSessionData } from 'core/utils/auth';
+import { makeLogin } from 'core/utils/request';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import AuthCard from '../Card';
 import './styles.scss';
 
 type FormData = {
-  email: string;
+  username: string;
   password: string;
 }
 
 const Login = () => {
   const { register, handleSubmit } = useForm<FormData>();
+  const [ hasError, setHasError ] = useState(false);
+  const history = useHistory();
 
   const onSubmit = ( data: FormData ) => {
-    console.log(data);
+    makeLogin(data)
+      .then( response => {
+        setHasError(false);
+        saveSessionData(response.data);
+        history.push('/admin');
+      })
+      .catch(() => {
+        setHasError(true);
+      });
   }
 
   return (
     <AuthCard title = "login">
+      { hasError && (
+        <div className="alert alert-danger mt-5">
+          Usuário ou senha inválidos!
+        </div>
+      )}
+
       <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
         <input 
           className="form-control input-base margin-bottom-30"
-          name="email"
+          name="username"
           placeholder="Email"
-          ref={register}
+          ref={register({ required: true })}
           type="email" 
         />
         <input 
           className="form-control input-base"
           name="password"
           placeholder="Senha"
-          ref={register}
+          ref={register({ minLength: 5, required: true })}
           type="password" 
         />
         <Link to="/admin/auth/recover" className="login-recover-link">
