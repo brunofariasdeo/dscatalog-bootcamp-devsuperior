@@ -3,7 +3,7 @@ import { saveSessionData } from 'core/utils/auth';
 import { makeLogin } from 'core/utils/request';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import AuthCard from '../Card';
 import './styles.scss';
 
@@ -12,17 +12,24 @@ type FormData = {
   password: string;
 }
 
+type LocationState = {
+  from: string;
+}
+
 const Login = () => {
   const { register, handleSubmit, errors } = useForm<FormData>();
   const [ hasError, setHasError ] = useState(false);
   const history = useHistory();
+  let location = useLocation<LocationState>();
+
+  const { from } = location.state || { from: { pathname: "/admin"} };
 
   const onSubmit = ( data: FormData ) => {
     makeLogin(data)
       .then( response => {
         setHasError(false);
         saveSessionData(response.data);
-        history.push('/admin');
+        history.replace(from);
       })
       .catch(() => {
         setHasError(true);
