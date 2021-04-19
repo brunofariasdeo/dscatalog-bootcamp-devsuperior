@@ -27,9 +27,9 @@ const Routes = () => (
         <Auth />
       </Route>
       <Redirect from="/admin" to="/admin/products" exact/>
-      <PrivateRoute path="/admin">
+      <Route path="/admin">
         <Admin />
-      </PrivateRoute>
+      </Route>
     </Switch>
   </Router>
 );
