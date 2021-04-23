@@ -1,34 +1,53 @@
-import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import './styles.scss';
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
+import "./styles.scss";
 
-const Navbar = () => (
-  <nav className = "row bg-primary main-nav">
-    <div className="col-2">
-      <Link to="/" className="nav-logo-text">
-        <h4>DS Catalog</h4>
-      </Link>
-    </div>
-    <div className="col-6 offset-2">
-      <ul className ="main-menu"> 
-        <li>
-          <NavLink to="/" activeClassName="active" exact>
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/products" activeClassName="active">
-            Catálogo
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/admin" activeClassName="active">
-            Admin
-          </NavLink>
-        </li>
-      </ul>
-    </div>
-  </nav> 
-)
+const Navbar = () => {
+  const currentUser = "maria@gmail.com";
+
+  return (
+    <nav className="row bg-primary main-nav">
+      <div className="col-3">
+        <Link to="/" className="nav-logo-text">
+          <h4>DS Catalog</h4>
+        </Link>
+      </div>
+      <div className="col-6">
+        <ul className="main-menu">
+          <li>
+            <NavLink to="/" className="nav-link" exact>
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/products" className="nav-link">
+              Catálogo
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/admin" className="nav-link">
+              Admin
+            </NavLink>
+          </li>
+        </ul>
+      </div>
+      <div className="col-3 text-right">
+        {currentUser && (
+          <>
+            {currentUser}
+            <a href="#logout" className="nav-link active d-inline">
+              Logout
+            </a>
+          </>
+        )}
+        {!currentUser && (
+          <Link to="/auth/login" className="nav-link active">
+            Login
+          </Link>
+        )}
+      </div>
+    </nav>
+  );
+};
 
 export default Navbar;
