@@ -12,7 +12,7 @@ type FormState = {
 };
 
 const Form = () => {
-  const { handleSubmit, register } = useForm<FormState>();
+  const { errors, handleSubmit, register } = useForm<FormState>();
 
   const onSubmit = (data: FormState) => {
     makePrivateRequest({
@@ -27,33 +27,62 @@ const Form = () => {
       <BaseForm title="Cadastrar produto">
         <div className="row">
           <div className="col-6">
-            <input
-              className="form-control margin-bottom-30 input-base"
-              name="name"
-              placeholder="Nome do produto"
-              ref={register({
-                required: "Campo obrigatório",
-              })}
-              type="text"
-            />
-            <input
-              className="form-control margin-bottom-30 input-base"
-              name="price"
-              placeholder="Preço"
-              ref={register({
-                required: "Campo obrigatório",
-              })}
-              type="number"
-            />
-            <input
-              className="form-control margin-bottom-30 input-base"
-              name="imageUrl"
-              placeholder="Imagem do produto"
-              ref={register({
-                required: "Campo obrigatório",
-              })}
-              type="text"
-            />
+            <div className="margin-bottom-30">
+              <input
+                className="form-control input-base"
+                name="name"
+                placeholder="Nome do produto"
+                ref={register({
+                  minLength: {
+                    message: "O campo deve ter no mínimo 5 caracteres",
+                    value: 5,
+                  },
+                  maxLength: {
+                    message: "O campo deve ter no máximo 60 caracteres",
+                    value: 60,
+                  },
+                  required: "Campo obrigatório",
+                })}
+                type="text"
+              />
+              {errors.name && (
+                <div className="invalid-feedback d-block">
+                  {errors.name.message}
+                </div>
+              )}
+            </div>
+            <div className="margin-bottom-30">
+              <input
+                className="form-control input-base"
+                name="price"
+                placeholder="Preço"
+                ref={register({
+                  required: "Campo obrigatório",
+                })}
+                type="number"
+              />
+              {errors.price && (
+                <div className="invalid-feedback d-block">
+                  {errors.price.message}
+                </div>
+              )}
+            </div>
+            <div className="margin-bottom-30">
+              <input
+                className="form-control input-base"
+                name="imageUrl"
+                placeholder="Imagem do produto"
+                ref={register({
+                  required: "Campo obrigatório",
+                })}
+                type="text"
+              />
+              {errors.imageUrl && (
+                <div className="invalid-feedback d-block">
+                  {errors.imageUrl.message}
+                </div>
+              )}
+            </div>
           </div>
           <div className="col-6">
             <textarea
@@ -65,7 +94,12 @@ const Form = () => {
                 required: "Campo obrigatório",
               })}
               rows={10}
-            ></textarea>
+            />
+            {errors.description && (
+              <div className="invalid-feedback d-block">
+                {errors.description.message}
+              </div>
+            )}
           </div>
         </div>
       </BaseForm>
