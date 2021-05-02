@@ -1,94 +1,76 @@
-import { makePrivateRequest } from 'core/utils/request';
-import React, { useState } from 'react';
-import BaseForm from '../../BaseForm';
-import './styles.scss';
+import { makePrivateRequest } from "core/utils/request";
+import { useForm } from "react-hook-form";
+import React, { useState } from "react";
+import BaseForm from "../../BaseForm";
+import "./styles.scss";
 
 type FormState = {
-  category: string;
   description: string;
   name: string;
   price: string;
-}
-
-type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+  imageUrl: string;
+};
 
 const Form = () => {
-  const [formData, setFormData] = useState<FormState>({
-    category: '',
-    description: '',
-    name: '',
-    price: ''
-  });
+  const { handleSubmit, register } = useForm<FormState>();
 
-  const handleOnChange = (event: FormEvent) => {
-    const name = event.target.name;
-    const value = event.target.value;
-
-    setFormData(data => ({...data, [name]: value}));
-  }
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const payload = {
-      ...formData,
-      imgUrl: 'https://s2.glbimg.com/Q6BitDHXemYGisPxL6khf_uQAxY=/0x0:1080x1080/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2020/P/3/BLYaRHTmS6hyJHUD2zFw/1.jpg',
-      categories: [{id:formData.category}]
-    }
-
-    makePrivateRequest({ url:'/products', method: 'POST', data: payload })
-      .then(() => {
-        setFormData({ category: '', description: '', name: '', price: '' })
-      });
-  }
+  const onSubmit = (data: FormState) => {
+    makePrivateRequest({
+      url: "/products",
+      method: "POST",
+      data,
+    });
+  };
 
   return (
-    <form onSubmit = {handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <BaseForm title="Cadastrar produto">
         <div className="row">
           <div className="col-6">
-            <input 
-              className="form-control mb-5"
+            <input
+              className="form-control margin-bottom-30 input-base"
               name="name"
-              onChange={handleOnChange}
               placeholder="Nome do produto"
-              type="text" 
-              value={formData.name}
+              ref={register({
+                required: "Campo obrigatório",
+              })}
+              type="text"
             />
-            <select  
-              className="form-control mb-5"
-              name="category" 
-              onChange={handleOnChange}
-              value={formData.category}
-            >
-              <option value="1">Livros</option>
-              <option value="3">Computadores</option>
-              <option value="2">Eletronicos</option>
-            </select>
-            <input 
-              className="form-control"
+            <input
+              className="form-control margin-bottom-30 input-base"
               name="price"
-              onChange={handleOnChange}
               placeholder="Preço"
-              type="text" 
-              value={formData.price}
+              ref={register({
+                required: "Campo obrigatório",
+              })}
+              type="number"
+            />
+            <input
+              className="form-control margin-bottom-30 input-base"
+              name="imageUrl"
+              placeholder="Imagem do produto"
+              ref={register({
+                required: "Campo obrigatório",
+              })}
+              type="text"
             />
           </div>
           <div className="col-6">
-            <textarea  
-              className="form-control"
+            <textarea
+              className="form-control input-base"
               cols={30}
-              name="description" 
-              onChange={handleOnChange}
+              name="description"
+              placeholder="Descrição"
+              ref={register({
+                required: "Campo obrigatório",
+              })}
               rows={10}
-              value={formData.description}
-            >
-
-            </textarea>
+            ></textarea>
           </div>
         </div>
       </BaseForm>
     </form>
-  )
-}
+  );
+};
 
 export default Form;
